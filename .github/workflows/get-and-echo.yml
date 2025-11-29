@@ -1,0 +1,21 @@
+name: Trigger action from curl
+
+on:
+  repository_dispatch:
+    types: [deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check event data
+        run: |
+          echo "Event type recieved: ${{ github.event.action}}"
+          echo "Environment: ${{ github.event.client_payload.environment }}"
+          echo "Version: ${{ github.event.client_payload.version}}"
+    
+      - name: Deploy application
+        if: github.event.client_payload.environment == 'production'
+        run: |
+          echo "Deploy on production"
+
